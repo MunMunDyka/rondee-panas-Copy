@@ -5,6 +5,7 @@ import numpy as np
 from PIL import Image
 import io
 import os
+import json
 
 app = Flask(__name__)
 
@@ -14,16 +15,11 @@ print("🔥 Loading model from:", MODEL_PATH)
 model = load_model(MODEL_PATH)
 print("✅ Model berhasil diload!")
 
-# Label kelas - ganti sesuai jumlah output model
-class_names = [
-    'balai-adat-melayu',
-    'bukit-kursi-meriam',
-    'gedung-tabib',
-    'makam-engku-putri',
-    'makam-raja-ali-haji',
-    'masjid-raya-sultan-riau',
-    'rumah-hakim'
-]
+# Load labels.json
+LABELS_PATH = os.path.join("model", "labels.json")
+with open(LABELS_PATH, encoding="utf-8") as f:
+    labels = json.load(f)
+print("📖 labels.json berhasil dimuat!")
 
 # Fungsi preprocessing gambar
 def preprocess_image(img_bytes):
@@ -46,9 +42,17 @@ def predict():
     class_id = int(np.argmax(preds))
     confidence = float(np.max(preds))
 
+    # Ambil nama label berdasarkan urutan
+    label_key = list(labels.keys())[class_id]
+    label_info = labels[label_key]
+
     return jsonify({
-        "label": class_names[class_id],
-        "confidence": f"{confidence*100:.2f}%"
+        "label": label_info["name"],
+        "confidence": f"{confidence*100:.2f}%",
+        "description": label_info["description"],
+        "location": label_info["location"],
+        "history": label_info["history"],
+        "architecture": label_info["architecture"]
     })
 
 # Jalankan server
