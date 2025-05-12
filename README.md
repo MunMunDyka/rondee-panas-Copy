@@ -127,7 +127,7 @@ curl -X POST https://rondee-panas.onrender.com/predict \
 
 ## ✨ Credits
 
-Made with ❤️ by Vinsen & Aichan for Pulau Penyengat AI project.
+Made by Vinsen, Aichan, and Nuswapada for Pulau Penyengat AI project.
 
 Designed to educate and promote cultural tourism through tech!
 
